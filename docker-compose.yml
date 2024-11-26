@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  postgres_myhero:
+    image: postgres:15
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: myhero_user
+      POSTGRES_PASSWORD: myhero_password
+      POSTGRES_DB: myhero_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

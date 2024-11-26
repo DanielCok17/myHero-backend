@@ -1,0 +1,105 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+    CUSTOMER
+    INFLUENCER
+    ADMIN
+}
+
+enum BookingStatus {
+    PENDING
+    CONFIRMED
+    CANCELLED
+}
+
+enum PaymentStatus {
+    PENDING
+    COMPLETED
+    FAILED
+}
+
+model User {
+    id               String      @id @default(cuid())
+    email            String?     @unique
+    password         String?
+    role             Role
+    oauthProvider    String? // Example: "facebook", "google"
+    oauthProviderId  String?     @unique // The ID provided by the OAuth provider
+    oauthAccessToken String? // Token provided by the OAuth provider
+    profile          Profile?
+    createdAt        DateTime    @default(now())
+    updatedAt        DateTime    @updatedAt
+    bookings         Booking[] // Relation to bookings
+    payments         Payment[]   @relation("UserPayments") // Relation to payments
+    influencer       Influencer? @relation("UserInfluencer") // Relation to Influencer
+    admin            Admin?      @relation("UserAdmin") // Relation to Admin
+}
+
+model Profile {
+    id           String  @id @default(cuid())
+    firstName    String
+    lastName     String
+    bio          String?
+    profileImage String?
+    socialMedia  Json? // Links to social media accounts
+    userId       String  @unique
+    user         User    @relation(fields: [userId], references: [id])
+}
+
+model Influencer {
+    id           String         @id @default(cuid())
+    userId       String         @unique
+    user         User           @relation("UserInfluencer", fields: [userId], references: [id])
+    categories   String[] // Array of categories like Music, Sports, etc.
+    availability Availability[]
+    bookings     Booking[] // Relation to bookings
+    pricing      Json // Pricing information for services
+}
+
+model Admin {
+    id     String @id @default(cuid())
+    userId String @unique
+    user   User   @relation("UserAdmin", fields: [userId], references: [id])
+}
+
+model Availability {
+    id           String     @id @default(cuid())
+    influencerId String
+    influencer   Influencer @relation(fields: [influencerId], references: [id])
+    startTime    DateTime
+    endTime      DateTime
+}
+
+model Booking {
+    id           String        @id @default(cuid())
+    customerId   String
+    customer     User          @relation(fields: [customerId], references: [id])
+    influencerId String
+    influencer   Influencer    @relation(fields: [influencerId], references: [id])
+    service      String // Service description
+    message      String? // Customer's custom message
+    status       BookingStatus
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    payment      Payment? // One-to-one relation to payment
+}
+
+model Payment {
+    id            String        @id @default(cuid())
+    bookingId     String        @unique
+    booking       Booking       @relation(fields: [bookingId], references: [id])
+    amount        Float
+    currency      String // Example: "USD"
+    paymentMethod String // Example: "Stripe"
+    status        PaymentStatus
+    createdAt     DateTime      @default(now())
+    userId        String
+    user          User          @relation("UserPayments", fields: [userId], references: [id])
+}
