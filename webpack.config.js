@@ -1,10 +1,13 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/index.ts', // upravte na váš hlavný súbor
+    entry: './src/server.ts',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
+    },
+    resolve: {
+        extensions: ['.ts', '.js'],
     },
     module: {
         rules: [
@@ -15,7 +18,5 @@ module.exports = {
             },
         ],
     },
-    resolve: {
-        extensions: ['.ts', '.js'],
-    },
+    mode: 'development', // Alebo 'production' podľa potreby
 };
