@@ -26,20 +26,45 @@ enum PaymentStatus {
 }
 
 model User {
-    id               String      @id @default(cuid())
-    email            String?     @unique
-    password         String?
-    role             Role
-    oauthProvider    String? // Example: "facebook", "google"
-    oauthProviderId  String?     @unique // The ID provided by the OAuth provider
-    oauthAccessToken String? // Token provided by the OAuth provider
-    profile          Profile?
-    createdAt        DateTime    @default(now())
-    updatedAt        DateTime    @updatedAt
-    bookings         Booking[] // Relation to bookings
-    payments         Payment[]   @relation("UserPayments") // Relation to payments
-    influencer       Influencer? @relation("UserInfluencer") // Relation to Influencer
-    admin            Admin?      @relation("UserAdmin") // Relation to Admin
+    id                   String          @id @default(cuid())
+    email                String?         @unique
+    password             String?
+    role                 Role
+    oauthProvider        String? // Example: "facebook", "google"
+    oauthProviderId      String?         @unique // The ID provided by the OAuth provider
+    oauthAccessToken     String? // Token provided by the OAuth provider
+    profile              Profile?
+    createdAt            DateTime        @default(now())
+    updatedAt            DateTime        @updatedAt
+    bookings             Booking[] // Relation to bookings
+    payments             Payment[]       @relation("UserPayments") // Relation to payments
+    influencer           Influencer?     @relation("UserInfluencer") // Relation to Influencer
+    admin                Admin?          @relation("UserAdmin") // Relation to Admin
+    loginActivities      LoginActivity[] // Relation to login activity
+    refreshToken         String?
+    passwordResetToken   String? // Token pre reset hesla
+    passwordResetExpires DateTime? // Expirácia reset tokenu
+}
+
+model LoginActivity {
+    id        String   @id @default(cuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    ipAddress String // IP adresa používateľa
+    userAgent String // Informácie o prehliadači alebo aplikácii
+    createdAt DateTime @default(now()) // Čas prihlásenia
+}
+
+model TrafficLog {
+    id          String   @id @default(cuid())
+    method      String // HTTP metóda (GET, POST, atď.)
+    url         String // Požadovaná URL
+    ipAddress   String // IP adresa klienta
+    userAgent   String // Informácie o prehliadači alebo aplikácii
+    statusCode  Int // Stavový kód odpovede
+    duration    Float // Trvanie požiadavky (v milisekundách)
+    description String? // Popis požiadavky
+    createdAt   DateTime @default(now()) // Čas požiadavky
 }
 
 model Profile {

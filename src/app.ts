@@ -2,21 +2,25 @@ import express, { Application } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
+import xss from "xss-clean";
 import routes from "./routes";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import swaggerConfig from "./swaggerConfig";
 import authRoutes from "./routes/authRoutes";
+import { trafficLogger } from "./middleware/trafficLogger";
 
 const createApp = (): Application => {
     const app = express();
 
     // Middleware
+    app.use(trafficLogger);
     app.use(express.json()); // Parse JSON bodies
     app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
     app.use(cors()); // Enable Cross-Origin Resource Sharing
     app.use(helmet()); // Enhance API security
     app.use(morgan("dev")); // Log HTTP requests
+    app.use(xss()); // Sanitize user input
 
     // Routes
     app.use("/api", routes);

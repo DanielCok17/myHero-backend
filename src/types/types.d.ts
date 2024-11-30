@@ -1,4 +1,5 @@
-import { User } from "@prisma/client";
+import { Role } from "@prisma/client";
+import "express";
 
 declare global {
     namespace Express {
@@ -6,11 +7,8 @@ declare global {
             user?: {
                 id: string;
                 email: string;
-                firstName?: string;
-                lastName?: string;
+                role: Role; // Match the Role enum from Prisma
             };
         }
     }
 }
-
-export { };

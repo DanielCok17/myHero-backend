@@ -1,35 +1,18 @@
-// {
-//   "compilerOptions": {
-//     "module": "commonjs",
-//     "target": "ES6",
-//     "rootDir": ".",
-//     "outDir": "./dist",
-//     "resolveJsonModule": true,
-//     "esModuleInterop": true,
-//     "strict": true,
-//     "typeRoots": ["./node_modules/@types", "./src"],
-//   },
-//   "include": ["src/**/*.ts", "src/types.d.ts"]
-// }
-
 {
   "compilerOptions": {
-    "module": "commonjs",
     "target": "ES6",
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
+    "module": "commonjs",
     "strict": true,
-    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "esModuleInterop": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"], // Include the types directory
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "baseUrl": "./",
     "paths": {
-      "config": ["./src/config"],
-      "controllers": ["./src/controllers"],
-      "middleware": ["./src/middleware"],
-      "models": ["./src/models"],
-      "routes": ["./src/routes"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/types.d.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*.ts", "src/types/**/*.d.ts"],
+  "exclude": ["node_modules"]
 }

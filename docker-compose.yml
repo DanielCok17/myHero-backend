@@ -23,6 +23,16 @@ services:
     volumes:
       - redis_data:/data
 
+  myhero_app:
+    build: .
+    container_name: myhero_app
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres_myhero
+      - redis_myhero
+
 volumes:
   postgres_data:
     driver: local

@@ -5,10 +5,8 @@ import authRoutes from "./authRoutes";
 
 const router = Router();
 
-// Group mobile routes under `/mobile`
 router.use("/mobile", mobileRoutes);
 
-// Group web routes under `/web`
 router.use("/web", webRoutes);
 
 // Share auth routes between web and mobile
